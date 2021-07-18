@@ -5,6 +5,7 @@ namespace blackjack200\wdpe;
 
 
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerCreationEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\ScriptCustomEventPacket;
 use pocketmine\plugin\PluginBase;
@@ -24,5 +25,9 @@ class Tools extends PluginBase implements Listener {
 				$player->updateLatency((int) $pk->eventData);
 			}
 		}
+	}
+
+	public function onPlayerCreation(PlayerCreationEvent $event) : void {
+		$event->setPlayerClass(WaterdogPlayer::class);
 	}
 }

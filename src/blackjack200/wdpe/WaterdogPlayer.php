@@ -14,6 +14,10 @@ class WaterdogPlayer extends Player {
 		return $this->latency;
 	}
 
+	public function getPing() : int {
+		return $this->getLatency();
+	}
+
 	/** @internal */
 	public function updateLatency(int $latency) : void {
 		$this->latency = $latency;
