@@ -13,6 +13,7 @@ use pocketmine\plugin\PluginBase;
 class Tools extends PluginBase implements Listener {
 	public function onEnable() : void {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		$this->getScheduler()->scheduleRepeatingTask(new UpdateLatencyTask(), 10);
 	}
 
 	public function onDataPacketReceive(DataPacketReceiveEvent $event) : void {
