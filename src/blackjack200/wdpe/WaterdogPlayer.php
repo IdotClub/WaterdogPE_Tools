@@ -4,7 +4,7 @@
 namespace blackjack200\wdpe;
 
 
-use pocketmine\network\mcpe\protocol\ScriptCustomEventPacket;
+use pocketmine\network\mcpe\protocol\DebugInfoPacket;
 use pocketmine\Player;
 
 class WaterdogPlayer extends Player {
@@ -24,16 +24,12 @@ class WaterdogPlayer extends Player {
 	}
 
 	public function connectProxyServer(string $name) : void {
-		$pk = new ScriptCustomEventPacket();
-		$pk->eventName = 'waterdog:transfer';
-		$pk->eventData = $name;
+		$pk = DebugInfoPacket::create(0, 'waterdog:transfer:' . $name);
 		$this->dataPacket($pk);
 	}
 
 	public function dispatchProxyCommand(string $command) : void {
-		$pk = new ScriptCustomEventPacket();
-		$pk->eventName = 'waterdog:dispatch';
-		$pk->eventData = $command;
+		$pk = DebugInfoPacket::create(0, 'waterdog:dispatch:' . $command);
 		$this->dataPacket($pk);
 	}
 }

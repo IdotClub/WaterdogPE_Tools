@@ -7,7 +7,7 @@ namespace blackjack200\wdpe;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerCreationEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\network\mcpe\protocol\ScriptCustomEventPacket;
+use pocketmine\network\mcpe\protocol\DebugInfoPacket;
 use pocketmine\plugin\PluginBase;
 
 class Tools extends PluginBase implements Listener {
@@ -18,12 +18,15 @@ class Tools extends PluginBase implements Listener {
 
 	public function onDataPacketReceive(DataPacketReceiveEvent $event) : void {
 		$pk = $event->getPacket();
-		if ($pk::NETWORK_ID === ScriptCustomEventPacket::NETWORK_ID) {
+		if ($pk::NETWORK_ID === DebugInfoPacket::NETWORK_ID) {
 			$player = $event->getPlayer();
-			assert($pk instanceof ScriptCustomEventPacket);
+			assert($pk instanceof DebugInfoPacket);
 			assert($player instanceof WaterdogPlayer);
-			if ($pk->eventName === 'waterdog:latency') {
-				$player->updateLatency((int) $pk->eventData);
+			$parts = explode(':', $pk->getData());
+			if (count($parts) > 2 && $parts[0] === 'waterdog') {
+				if ($parts[1] === 'ping') {
+					$player->updateLatency((int) $parts[2]);
+				}
 			}
 		}
 	}
