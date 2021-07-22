@@ -10,12 +10,12 @@ use pocketmine\Server;
 
 class UpdateLatencyTask extends Task {
 
-	public function onRun(int $currentTick) {
+	public function onRun() : void {
 		$pk = DebugInfoPacket::create(0, 'waterdog:ping');
 		foreach (Server::getInstance()->getOnlinePlayers() as $player) {
 			if ($player->spawned) {
 				assert($player instanceof WaterdogPlayer);
-				$player->sendDataPacket($pk);
+				$player->getNetworkSession()->sendDataPacket($pk);
 			}
 		}
 	}

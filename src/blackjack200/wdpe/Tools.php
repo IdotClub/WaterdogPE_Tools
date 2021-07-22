@@ -19,13 +19,15 @@ class Tools extends PluginBase implements Listener {
 	public function onDataPacketReceive(DataPacketReceiveEvent $event) : void {
 		$pk = $event->getPacket();
 		if ($pk::NETWORK_ID === DebugInfoPacket::NETWORK_ID) {
-			$player = $event->getPlayer();
-			assert($pk instanceof DebugInfoPacket);
-			assert($player instanceof WaterdogPlayer);
-			$parts = explode(':', $pk->getData());
-			if (count($parts) > 2 && $parts[0] === 'waterdog') {
-				if ($parts[1] === 'ping') {
-					$player->updateLatency((int) $parts[2]);
+			$player = $event->getOrigin()->getPlayer();
+			if ($player !== null) {
+				assert($pk instanceof DebugInfoPacket);
+				assert($player instanceof WaterdogPlayer);
+				$parts = explode(':', $pk->getData());
+				if (count($parts) > 2 && $parts[0] === 'waterdog') {
+					if ($parts[1] === 'ping') {
+						$player->updateLatency((int) $parts[2]);
+					}
 				}
 			}
 		}
