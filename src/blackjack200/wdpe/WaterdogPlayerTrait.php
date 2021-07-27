@@ -5,7 +5,7 @@ namespace blackjack200\wdpe;
 
 
 trait WaterdogPlayerTrait {
-	protected int $ping;
+	protected int $ping = -1;
 
 	public function getPing() : int {
 		return $this->ping;
