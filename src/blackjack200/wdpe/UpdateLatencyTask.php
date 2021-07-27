@@ -14,7 +14,6 @@ class UpdateLatencyTask extends Task {
 		$pk = DebugInfoPacket::create(0, 'waterdog:ping');
 		foreach (Server::getInstance()->getOnlinePlayers() as $player) {
 			if ($player->spawned) {
-				assert($player instanceof WaterdogPlayer);
 				$player->getNetworkSession()->sendDataPacket($pk);
 			}
 		}
