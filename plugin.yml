@@ -1,6 +1,6 @@
 name: WaterDogPE
 main: blackjack200\wdpe\Tools
-version: 0.0.3
+version: 0.0.4
 api: 4.0.0
 author: Blackjack200
 softdepend:

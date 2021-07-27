@@ -18,7 +18,7 @@ class Tools extends PluginBase implements Listener {
 
 	public function onEnable() : void {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getScheduler()->scheduleRepeatingTask(new UpdateLatencyTask(), 10);
+		$this->getScheduler()->scheduleRepeatingTask(new UpdateLatencyTask(), 100);
 		$this->getServer()->getCommandMap()->register('', new WaterdogTransferCommand());
 		if ($this->getServer()->getPluginManager()->getPlugin('PracticeCore') !== null) {
 			$this->class = PracticeCorePlayer::class;
