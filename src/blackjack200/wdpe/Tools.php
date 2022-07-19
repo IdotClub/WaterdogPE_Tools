@@ -17,10 +17,16 @@ class Tools extends PluginBase implements Listener {
 	private string $class;
 
 	public function onEnable() : void {
-		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		$server = $this->getServer();
+		$map = $server->getCommandMap();
+
+		$map->register('', new WaterdogTransferCommand());
+		$map->register('', new ExtendedWaterdogTransferCommand());
+
+		$server->getPluginManager()->registerEvents($this, $this);
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateLatencyTask(), 100);
-		$this->getServer()->getCommandMap()->register('', new WaterdogTransferCommand());
-		if ($this->getServer()->getPluginManager()->getPlugin('PracticeCore') !== null) {
+
+		if ($server->getPluginManager()->getPlugin('PracticeCore') !== null) {
 			$this->class = PracticeCorePlayer::class;
 		} else {
 			$this->class = PMPlayer::class;
@@ -40,10 +46,8 @@ class Tools extends PluginBase implements Listener {
 				assert($pk instanceof DebugInfoPacket);
 				assert($player instanceof WaterdogInterface);
 				$parts = explode(':', $pk->getData());
-				if (count($parts) > 2 && $parts[0] === 'waterdog') {
-					if ($parts[1] === 'ping') {
-						$player->updatePing((int) $parts[2]);
-					}
+				if (count($parts) > 2 && $parts[0] === 'waterdog' && $parts[1] === 'ping') {
+					$player->updatePing((int) $parts[2]);
 				}
 			}
 		}
