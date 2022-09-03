@@ -5,3 +5,4 @@ api: 4.0.0
 author: Blackjack200
 softdepend:
   - PracticeCore
+  - PracticeProtocol

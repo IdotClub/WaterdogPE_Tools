@@ -4,6 +4,8 @@
 namespace blackjack200\wdpe;
 
 
+use blackjack200\essential\Essentials;
+use blackjack200\protocol\PracticeProtocol;
 use blackjack200\wdpe\player\PMPlayer;
 use blackjack200\wdpe\player\PracticeCorePlayer;
 use pocketmine\event\Listener;
@@ -12,6 +14,7 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\DebugInfoPacket;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 
 class Tools extends PluginBase implements Listener {
 	private string $class;
@@ -25,11 +28,25 @@ class Tools extends PluginBase implements Listener {
 
 		$server->getPluginManager()->registerEvents($this, $this);
 		$this->getScheduler()->scheduleRepeatingTask(new UpdateLatencyTask(), 100);
+		$fulfill = static fn($p) => $server->getPluginManager()->getPlugin($p) !== null;
 
-		if ($server->getPluginManager()->getPlugin('PracticeCore') !== null) {
+		if ($fulfill('PracticeCore')) {
 			$this->class = PracticeCorePlayer::class;
 		} else {
 			$this->class = PMPlayer::class;
+		}
+		if ($fulfill('PracticeProtocol')) {
+			Essentials::register('transfer', static fn(string $player, string $type) => PracticeProtocol::getInstance()->getReporter()->select($type)->whenFulfill(static function(?string $result) use ($type, $player) : void {
+				$player = Server::getInstance()->getPlayerByPrefix($player);
+				if ($player !== null) {
+					if ($result === null) {
+						$player->sendMessage("§5Failed connected to $type, please try again later.");
+						return;
+					}
+					$player->sendMessage("§aTransfering to $result");
+					self::connectProxyServer($player, $result);
+				}
+			})->settle());
 		}
 	}
 
